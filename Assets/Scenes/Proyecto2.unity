@@ -287,6 +287,9 @@ MonoBehaviour:
   panSpeed: 20
   panBorderThickness: 10
   panLimit: {x: 40, y: 50}
+  scrollSpeed: 20
+  minY: 20
+  maxY: 120
 --- !u!20 &282840813
 Camera:
   m_ObjectHideFlags: 0
