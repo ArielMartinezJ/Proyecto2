@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerControllerAntiguo : MonoBehaviour {
 
 #region Public Variables
     [Header("\t--Public Variables--")]
