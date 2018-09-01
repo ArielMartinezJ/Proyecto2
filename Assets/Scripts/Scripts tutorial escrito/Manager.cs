@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Manager : MonoBehaviour {
 
-	private Building buildingClass;
+	private Building2 buildingClass;
 	private Placement placement;
 	private bool isClickable;
 
 	void Start () {
 		placement = GetComponent<Placement> ();
-		buildingClass = GetComponent<Building> ();
+		buildingClass = GetComponent<Building2> ();
 		isClickable = true;
 	}
 

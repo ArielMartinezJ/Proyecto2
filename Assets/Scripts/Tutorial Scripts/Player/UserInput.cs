@@ -18,8 +18,30 @@ public class UserInput : MonoBehaviour
         {
             MoveCamera();
             RotateCamera();
+            MouseActivity();
         }
 	}
+
+    private void MouseActivity()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            LeftMouseClick();
+        } else if (Input.GetMouseButtonDown(1))
+        {
+            RightMouseClick();
+        }
+    }
+
+    private void LeftMouseClick()
+    {
+
+    }
+
+    private void RightMouseClick()
+    {
+
+    }
 
     private void MoveCamera()
     {
