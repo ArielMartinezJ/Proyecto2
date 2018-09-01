@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building : WorldObject
-{
+public class Unit : WorldObject {
+
     protected virtual void Awake()
     {
         base.Awake();

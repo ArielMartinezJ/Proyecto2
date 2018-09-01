@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTS;
 
 public class HUD : MonoBehaviour
 {
-    public GUISkin resourceSkin, ordersSkin;
+    public GUISkin resourceSkin, ordersSkin, selectBoxSkin;
 
     public bool MouseInBounds()
     {
@@ -17,12 +18,18 @@ public class HUD : MonoBehaviour
         return insideWidth && insideHeight;
     }
 
+    public Rect GetPlayingArea()
+    {
+        return new Rect(0, RESOURCE_BAR_HEIGHT, Screen.width - ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT);
+    }
+
     private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40, SELECTION_NAME_HEIGHT = 30;
 
     private Player player;
 
     void Start()
     {
+        ResourceManager.StoreSelectBoxItems(selectBoxSkin);
         player = transform.root.GetComponent<Player>();
     }
 
