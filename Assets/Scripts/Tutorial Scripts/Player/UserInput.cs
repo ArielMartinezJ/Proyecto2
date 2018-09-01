@@ -43,7 +43,7 @@ public class UserInput : MonoBehaviour
         {
             movement.z -= ResourceManager.ScrollSpeed;
         }
-        else if (yPos <= Screen.height && xPos > Screen.height - ResourceManager.ScrollWidth)
+        else if (yPos <= Screen.height && yPos > Screen.height - ResourceManager.ScrollWidth)
         {
             movement.z += ResourceManager.ScrollSpeed;
         }
@@ -59,6 +59,7 @@ public class UserInput : MonoBehaviour
         //Calculate desired camera position based on received input
         Vector3 origin = Camera.main.transform.position;
         Vector3 destination = origin;
+
         destination.x += movement.x;
         destination.y += movement.y;
         destination.z += movement.z;
