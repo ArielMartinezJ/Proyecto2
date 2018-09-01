@@ -35,12 +35,58 @@ public class UserInput : MonoBehaviour
 
     private void LeftMouseClick()
     {
-
+        if (player.hud.MouseInBounds()) //not within the hud
+        {
+            GameObject hitObject = FindHitObject();
+            Vector3 hitPoint = FindHitPoint();
+            if (hitObject && hitPoint != ResourceManager.InvalidPosition)
+            {
+                if (player.SelectedObject)
+                {
+                    player.SelectedObject.MouseClick(hitObject, hitPoint, player);
+                } else if (hitObject.name != "Ground")
+                {
+                    WorldObject worldObject = hitObject.transform.root.GetComponent<WorldObject>();
+                    if (worldObject)
+                    {
+                        //We already know the player has no selected object
+                        player.SelectedObject = worldObject;
+                        worldObject.SetSelection(true);
+                    }
+                }
+            }
+        }
     }
 
     private void RightMouseClick()
     {
+        if (player.hud.MouseInBounds() && !Input.GetKey(KeyCode.LeftAlt) && player.SelectedObject)
+        {
+            player.SelectedObject.SetSelection(false);
+            player.SelectedObject = null;
+        }
+    }
 
+    private GameObject FindHitObject()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.collider.gameObject;
+        }
+        return null;
+    }
+
+    private Vector3 FindHitPoint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.point;
+        }
+        return ResourceManager.InvalidPosition;
     }
 
     private void MoveCamera()

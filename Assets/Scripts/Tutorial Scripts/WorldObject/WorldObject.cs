@@ -23,6 +23,17 @@ public class WorldObject : MonoBehaviour
         //It is up to the children with specific actions to determine what to do with each of those actions
     }
 
+    public virtual void MouseClick (GameObject hitObject, Vector3 hitPoint, Player controller)
+    {
+        if (currentlySelected && hitObject && hitObject.name != "Ground")
+        {
+            WorldObject worldObject = hitObject.transform.root.GetComponent<WorldObject>();
+            if (worldObject) //worldObject != null
+            {
+                ChangeSelection(worldObject, controller);
+            }
+        }
+    }
     protected Player player;
     protected string[] actions = { };
     protected bool currentlySelected = false;
@@ -44,6 +55,19 @@ public class WorldObject : MonoBehaviour
 
     protected virtual void OnGUI()
     {
+
+    }
+
+    private void ChangeSelection (WorldObject worldObject, Player controller)
+    {
+        //this should be called by the following line, but there is an outside chance it will not
+        SetSelection(false);
+        if (controller.SelectedObject)
+        {
+            controller.SelectedObject.SetSelection(false);
+        }
+        controller.SelectedObject = worldObject;
+        worldObject.SetSelection(true);
 
     }
 }
