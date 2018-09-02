@@ -1991,6 +1991,21 @@ MonoBehaviour:
   resourceSkin: {fileID: 11400000, guid: 2ae11c7e35728964a9b926f39ec11512, type: 2}
   ordersSkin: {fileID: 11400000, guid: 4aff5a07e59ff9c4ebb9b31e1136322b, type: 2}
   selectBoxSkin: {fileID: 11400000, guid: 4efdc6d3edc464b4fbc2a109c7168337, type: 2}
+  activeCursor: {fileID: 0}
+  selectCursor: {fileID: 2800000, guid: f8eaa519c514c7d48b1637c8f2d61b3d, type: 3}
+  leftCursor: {fileID: 2800000, guid: ac67fc1730b3a9548bd8b77074f8f301, type: 3}
+  rightCursor: {fileID: 2800000, guid: 79536da2854c9f84dabb6e1290604c55, type: 3}
+  upCursor: {fileID: 2800000, guid: 4df40292360125b4b92fbe2bb4211562, type: 3}
+  downCursor: {fileID: 2800000, guid: 6c26f6f71494a244fa35cc188fac4990, type: 3}
+  moveCursors:
+  - {fileID: 2800000, guid: c8a9b0b52e692834aad9ac318a58aff3, type: 3}
+  - {fileID: 2800000, guid: 62e27ba52672df84c888c4120f9a9391, type: 3}
+  attackCursors:
+  - {fileID: 2800000, guid: cfbac03674832f9478498675c83a7b80, type: 3}
+  - {fileID: 2800000, guid: 764aa7d8337f83d409139b4ec82d1d94, type: 3}
+  harvestCursors:
+  - {fileID: 2800000, guid: 6910cf4bda2df114d929d2dc659b9234, type: 3}
+  - {fileID: 2800000, guid: 00a8fe77ea785454f9c86da4395419c7, type: 3}
 --- !u!1 &1809556824
 GameObject:
   m_ObjectHideFlags: 0
