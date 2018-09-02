@@ -805,6 +805,7 @@ Transform:
   m_Children:
   - {fileID: 1512650074}
   - {fileID: 1806054096}
+  - {fileID: 982150299}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1151,8 +1152,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 982150298}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -7.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2059823724}
@@ -1160,8 +1161,8 @@ Transform:
   - {fileID: 1754915708}
   - {fileID: 216278628}
   - {fileID: 2000633499}
-  m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_Father: {fileID: 369424581}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &982150300
 MonoBehaviour:
@@ -1180,6 +1181,8 @@ MonoBehaviour:
   sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
+  moveSpeed: 5
+  rotateSpeed: 5
 --- !u!1 &989909385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,8 +1555,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!64 &1714833345
-MeshCollider:
+--- !u!65 &1714833345
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -1561,11 +1564,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 10, y: 2.220446e-16, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1714833346
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1991,6 +1992,7 @@ MonoBehaviour:
   resourceSkin: {fileID: 11400000, guid: 2ae11c7e35728964a9b926f39ec11512, type: 2}
   ordersSkin: {fileID: 11400000, guid: 4aff5a07e59ff9c4ebb9b31e1136322b, type: 2}
   selectBoxSkin: {fileID: 11400000, guid: 4efdc6d3edc464b4fbc2a109c7168337, type: 2}
+  mouseCursorSkin: {fileID: 0}
   activeCursor: {fileID: 0}
   selectCursor: {fileID: 2800000, guid: f8eaa519c514c7d48b1637c8f2d61b3d, type: 3}
   leftCursor: {fileID: 2800000, guid: ac67fc1730b3a9548bd8b77074f8f301, type: 3}

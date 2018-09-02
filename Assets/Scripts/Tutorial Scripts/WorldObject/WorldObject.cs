@@ -32,10 +32,22 @@ public class WorldObject : MonoBehaviour
     {
         if (currentlySelected && hitObject && hitObject.name != "Ground")
         {
-            WorldObject worldObject = hitObject.transform.root.GetComponent<WorldObject>();
+            WorldObject worldObject = hitObject.transform.parent.GetComponent<WorldObject>();
             if (worldObject) //worldObject != null
             {
                 ChangeSelection(worldObject, controller);
+            }
+        }
+    }
+
+    public virtual void SetHoverState(GameObject hoverObject)
+    {
+        //only handle input if owned by a human player and currently selected
+        if (player && player.isHuman && currentlySelected)
+        {
+            if (hoverObject.name != "Ground")
+            {
+                player.hud.SetCursorState(CursorState.Select);
             }
         }
     }
