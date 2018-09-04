@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 4537170377129152}
   - component: {fileID: 114751308678859542}
   m_Layer: 0
-  m_Name: WarFactory
+  m_Name: WarFactory(with model)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -315,3 +315,4 @@ MonoBehaviour:
   sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
+  maxBuildProgress: 0
