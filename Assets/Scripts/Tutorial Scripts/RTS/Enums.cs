@@ -1,4 +1,6 @@
-﻿namespace RTS
+﻿using RTS;
+
+namespace RTS
 {
     public enum CursorState
     {
@@ -10,5 +12,11 @@
         PanUp,
         PanDown,
         Harvest
+    }
+
+    public enum ResourceType
+    {
+        Money,
+        Power
     }
 }
