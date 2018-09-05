@@ -257,11 +257,7 @@ public class HUD : MonoBehaviour
         GUIStyle buttons = new GUIStyle();
         buttons.hover.background = smallButtonHover;
         buttons.active.background = smallButtonClick;
-        if (activeCursorState == CursorState.RallyPoint)
-        {
-            buttons.normal.background = rallyPointActiveImage;
-            Debug.Log("Hello");
-        }
+        
         GUI.skin.button = buttons;
         int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH + BUTTON_SPACING;
         int topPos = buildAreaHeight - BUILD_IMAGE_HEIGHT / 2;
@@ -273,6 +269,10 @@ public class HUD : MonoBehaviour
             building.Sell();
         }
 
+        if (activeCursorState == CursorState.RallyPoint)
+        {
+            buttons.normal.background = rallyPointActiveImage;
+        }
         if (building.hasSpawnPoint())
         {
             leftPos += width + BUTTON_SPACING;

@@ -110,6 +110,7 @@ public class Building : WorldObject
                 if (player.hud.GetPreviousCursorState() == CursorState.RallyPoint)
                 {
                     player.hud.SetCursorState(CursorState.RallyPoint);
+                    Debug.Log("Previous");
                 }
             }
         }
@@ -126,6 +127,7 @@ public class Building : WorldObject
                 if ((player.hud.GetCursorState() == CursorState.RallyPoint || player.hud.GetPreviousCursorState() == CursorState.RallyPoint) && hitPoint != ResourceManager.InvalidPosition)
                 {
                     SetRallyPoint(hitPoint);
+                    Debug.Log("Hovering");
                 }
             }
         }

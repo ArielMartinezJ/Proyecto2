@@ -121,7 +121,6 @@ public class UserInput : MonoBehaviour
         float xPos = Input.mousePosition.x;
         float yPos = Input.mousePosition.y;
         Vector3 movement = new Vector3(0, 0, 0);
-
         bool mouseScroll = false;
 
         //Horizontal camera Movement
@@ -184,10 +183,10 @@ public class UserInput : MonoBehaviour
             Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ResourceManager.ScrollSpeed);
         }
 
-        if (!mouseScroll)
+        /*if (!mouseScroll) //comentado, ya que me daba problemas: no se cambiaba el cursor a otra imagen. Siempre se quedaba en Select
         {
             player.hud.SetCursorState(CursorState.Select);
-        }
+        }*/
     }
 
     private void RotateCamera()
