@@ -484,7 +484,9 @@ MonoBehaviour:
   objectName: WarFactory
   buildImage: {fileID: 2800000, guid: b367d1326b86c1e43bedb0d005f31b9b, type: 3}
   cost: 0
-  sellValue: 0
+  sellValue: 100
   hitPoints: 0
   maxHitPoints: 0
   maxBuildProgress: 0
+  rallyPointImage: {fileID: 2800000, guid: ae951838d59361f46900e306d3d573ef, type: 3}
+  sellImage: {fileID: 2800000, guid: a233262f569e06a49969522a59bb305b, type: 3}

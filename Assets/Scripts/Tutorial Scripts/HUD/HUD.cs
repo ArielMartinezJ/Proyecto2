@@ -5,40 +5,31 @@ using RTS;
 
 public class HUD : MonoBehaviour
 {
-    private Dictionary<ResourceType, int> resourceValues, resourceLimits;
-
     public GUISkin resourceSkin, ordersSkin, selectBoxSkin, mouseCursorSkin;
-
     public Texture2D activeCursor;
-    public Texture2D selectCursor, leftCursor, rightCursor, upCursor, downCursor;
+    public Texture2D selectCursor, leftCursor, rightCursor, upCursor, downCursor, rallyPointCursor;
     public Texture2D[] moveCursors, attackCursors, harvestCursors;
-
-    private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40, SELECTION_NAME_HEIGHT = 30;
-    private const int ICON_WIDTH = 32, ICON_HEIGHT = 32, TEXT_WIDTH = 128, TEXT_HEIGHT = 32;
+    public Texture2D[] resources;
+    public Texture2D buttonHover, buttonClick, smallButtonHover, smallButtonClick, rallyPointActiveImage;
+    public Texture2D buildFrame, buildMask;
 
     private Player player;
-    private CursorState activeCursorState;
-    private int currentFrame = 0;
-
-    public Texture2D[] resources;
+    private CursorState activeCursorState, previousCursorState;
+    private int currentFrame = 0, buildAreaHeight = 0;
+    private Dictionary<ResourceType, int> resourceValues, resourceLimits;
     private Dictionary<ResourceType, Texture2D> resourceImages;
-
     private WorldObject lastSelection;
     private float sliderValue;
-    public Texture2D buttonHover, buttonClick;
-    private const int BUILD_IMAGE_WIDTH = 64, BUILD_IMAGE_HEIGHT = 64;
-    private int buildAreaHeight = 0;
-    private const int BUTTON_SPACING = 7;
-    private const int SCROLL_BAR_WIDTH = 22;
-    private const int BUILD_IMAGE_PADDING = 8;
-    public Texture2D buildFrame, buildMask;
+
+    private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
+    private const int SELECTION_NAME_HEIGHT = 30, SCROLL_BAR_WIDTH = 22, BUTTON_SPACING = 7;
+    private const int ICON_WIDTH = 32, ICON_HEIGHT = 32, TEXT_WIDTH = 128, TEXT_HEIGHT = 32;
+    private const int BUILD_IMAGE_WIDTH = 64, BUILD_IMAGE_HEIGHT = 64, BUILD_IMAGE_PADDING = 8;
 
 
     void Start()
     {
         player = transform.root.GetComponent<Player>();
-        ResourceManager.StoreSelectBoxItems(selectBoxSkin);
-        SetCursorState(CursorState.Select);
         resourceValues = new Dictionary<ResourceType, int>();
         resourceLimits = new Dictionary<ResourceType, int>();
         resourceImages = new Dictionary<ResourceType, Texture2D>();
@@ -59,8 +50,9 @@ public class HUD : MonoBehaviour
                 default: break;
             }
         }
-        //InitializeResources();
         buildAreaHeight = Screen.height - RESOURCE_BAR_HEIGHT - SELECTION_NAME_HEIGHT - 2 * BUTTON_SPACING;
+        ResourceManager.StoreSelectBoxItems(selectBoxSkin);
+        SetCursorState(CursorState.Select);
     }
 
     private void OnGUI()
@@ -81,7 +73,6 @@ public class HUD : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         bool insideWidth = mousePos.x >= 0 && mousePos.x <= Screen.width - ORDERS_BAR_WIDTH;
         bool insideHeight = mousePos.y >= 0 && mousePos.y <= Screen.height - RESOURCE_BAR_HEIGHT;
-
         return insideWidth && insideHeight;
     }
 
@@ -92,6 +83,11 @@ public class HUD : MonoBehaviour
 
     public void SetCursorState(CursorState newState)
     {
+        if (activeCursorState != newState)
+        {
+            previousCursorState = activeCursorState;
+        }
+
         activeCursorState = newState;
         switch (newState)
         {
@@ -122,71 +118,12 @@ public class HUD : MonoBehaviour
             case CursorState.PanDown:
                 activeCursor = downCursor;
                 break;
+            case CursorState.RallyPoint:
+                activeCursor = rallyPointCursor;
+                break;
             default:
                 break;
         }
-    }
-
-    private void DrawMouseCursor()
-    {
-        bool mouseOverHud = !MouseInBounds() && activeCursorState != CursorState.PanRight && activeCursorState != CursorState.PanUp;
-
-        if (mouseOverHud)
-        {
-            Cursor.visible = true;
-        } else
-        {
-            Cursor.visible = false;
-            GUI.skin = mouseCursorSkin;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            UpdateCursorAnimation();
-            Rect cursorPosition = GetCursorDrawPosition();
-            GUI.Label(cursorPosition, activeCursor);
-            GUI.EndGroup();
-        }
-    }
-
-    private void UpdateCursorAnimation()
-    {
-        //sequence animation for cursor (based on more than one image for the cursor)
-        //change once per second, loops through array of images
-        if (activeCursorState == CursorState.Move)
-        {
-            currentFrame = (int)Time.time % moveCursors.Length; //it will advance one frame per second
-            activeCursor = moveCursors[currentFrame]; //we avoid using a loop on the array
-        } else if (activeCursorState == CursorState.Attack)
-        {
-            currentFrame = (int)Time.time % attackCursors.Length;
-            activeCursor = attackCursors[currentFrame];
-        }
-        else if (activeCursorState == CursorState.Harvest)
-        {
-            currentFrame = (int)Time.time % harvestCursors.Length;
-            activeCursor = harvestCursors[currentFrame];
-        }
-    }
-
-    private Rect GetCursorDrawPosition()
-    {
-        //set base position for the custom cursor image
-        float leftPos = Input.mousePosition.x;
-        float topPos = Screen.height - Input.mousePosition.y; //screen draw coordinates are inverted
-        
-        //adjust position based on the type of cursor being shown
-        if (activeCursorState == CursorState.PanRight)
-        {
-            leftPos = Screen.width - activeCursor.width;
-        } else if (activeCursorState == CursorState.PanDown)
-        {
-            topPos = Screen.height - activeCursor.height;
-        } else if (activeCursorState == CursorState.Move || activeCursorState == CursorState.Select || activeCursorState == CursorState.Harvest)
-        {
-            topPos -= activeCursor.height / 2;
-            leftPos -= activeCursor.width / 2;
-        }
-
-        return new Rect(leftPos, topPos, activeCursor.width, activeCursor.height);
-
     }
 
     public void SetResourceValues(Dictionary<ResourceType, int> resourceValues, Dictionary<ResourceType, int> resourceLimits)
@@ -195,6 +132,17 @@ public class HUD : MonoBehaviour
         this.resourceLimits = resourceLimits;
     }
 
+    public CursorState GetPreviousCursorState()
+    {
+        return previousCursorState;
+    }
+
+    public CursorState GetCursorState()
+    {
+        return activeCursorState;
+    }
+
+    //Private methods
     private void DrawOrdersBar()
     {
         GUI.skin = ordersSkin;
@@ -216,6 +164,7 @@ public class HUD : MonoBehaviour
                 if (selectedBuilding)
                 {
                     DrawBuildQueue(selectedBuilding.getBuildQueueValues(), selectedBuilding.getBuildPercentage());
+                    DrawStandardBuildingOptions(selectedBuilding);
                 }
             }
         }
@@ -282,6 +231,67 @@ public class HUD : MonoBehaviour
         return new Rect(BUTTON_SPACING, BUTTON_SPACING, SCROLL_BAR_WIDTH, groupHeight - 2 * BUTTON_SPACING);
     }
 
+    private void DrawBuildQueue(string[] buildQueue, float buildPercentage)
+    {
+        for (int i = 0; i < buildQueue.Length; i++)
+        {
+            float topPos = i * BUILD_IMAGE_HEIGHT - (i + 1) * BUILD_IMAGE_PADDING;
+            Rect buildPos = new Rect(BUILD_IMAGE_PADDING, topPos, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
+            GUI.DrawTexture(buildPos, ResourceManager.GetBuildImage(buildQueue[i]));
+            GUI.DrawTexture(buildPos, buildFrame);
+            topPos += BUILD_IMAGE_PADDING;
+            float width = BUILD_IMAGE_WIDTH - 2 * BUILD_IMAGE_PADDING;
+            float height = BUILD_IMAGE_HEIGHT - 2 * BUILD_IMAGE_PADDING;
+            if (i == 0)
+            {
+                //shrink the build mask on the item currently being built to give an idea of progress
+                topPos += height * buildPercentage;
+                height *= (1 - buildPercentage);
+            }
+            GUI.DrawTexture(new Rect(2 * BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
+        }
+    }
+
+    private void DrawStandardBuildingOptions(Building building)
+    {
+        GUIStyle buttons = new GUIStyle();
+        buttons.hover.background = smallButtonHover;
+        buttons.active.background = smallButtonClick;
+        if (activeCursorState == CursorState.RallyPoint)
+        {
+            buttons.normal.background = rallyPointActiveImage;
+            Debug.Log("Hello");
+        }
+        GUI.skin.button = buttons;
+        int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH + BUTTON_SPACING;
+        int topPos = buildAreaHeight - BUILD_IMAGE_HEIGHT / 2;
+        int width = BUILD_IMAGE_WIDTH / 2;
+        int height = BUILD_IMAGE_HEIGHT / 2;
+
+        if (GUI.Button(new Rect(leftPos, topPos, width, height), building.sellImage))
+        {
+            building.Sell();
+        }
+
+        if (building.hasSpawnPoint())
+        {
+            leftPos += width + BUTTON_SPACING;
+            if (GUI.Button(new Rect(leftPos, topPos, width, height), building.rallyPointImage))
+            {
+                if (activeCursorState != CursorState.RallyPoint && previousCursorState != CursorState.RallyPoint)
+                {
+                    SetCursorState(CursorState.RallyPoint);
+                }
+                else
+                {
+                    //dirty hack to ensure toggle between RallyPoint and not works ...
+                    SetCursorState(CursorState.PanRight);
+                    SetCursorState(CursorState.Select);
+                }
+            }
+        }
+    }
+
     private void DrawResourceBar()
     {
         GUI.skin = resourceSkin;
@@ -304,47 +314,69 @@ public class HUD : MonoBehaviour
         GUI.Label(new Rect(textLeft, topPos, TEXT_WIDTH, TEXT_HEIGHT), text);
     }
 
-    private void DrawBuildQueue(string[] buildQueue, float buildPercentage)
+    private void DrawMouseCursor()
     {
-        for (int i = 0; i < buildQueue.Length; i++)
+        bool mouseOverHud = !MouseInBounds() && activeCursorState != CursorState.PanRight && activeCursorState != CursorState.PanUp;
+
+        if (mouseOverHud)
         {
-            float topPos = i * BUILD_IMAGE_HEIGHT - (i + 1) * BUILD_IMAGE_PADDING;
-            Rect buildPos = new Rect(BUILD_IMAGE_PADDING, topPos, BUILD_IMAGE_WIDTH, BUILD_IMAGE_HEIGHT);
-            GUI.DrawTexture(buildPos, ResourceManager.GetBuildImage(buildQueue[i]));
-            GUI.DrawTexture(buildPos, buildFrame);
-            topPos += BUILD_IMAGE_PADDING;
-            float width = BUILD_IMAGE_WIDTH - 2 * BUILD_IMAGE_PADDING;
-            float height = BUILD_IMAGE_HEIGHT - 2 * BUILD_IMAGE_PADDING;
-            if (i == 0)
-            {
-                //shrink the build mask on the item currently being built to give an idea of progress
-                topPos += height * buildPercentage;
-                height *= (1 - buildPercentage);
-            }
-            GUI.DrawTexture(new Rect(2 * BUILD_IMAGE_PADDING, topPos, width, height), buildMask);
+            Cursor.visible = true;
+        } else
+        {
+            Cursor.visible = false;
+            GUI.skin = mouseCursorSkin;
+            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
+            UpdateCursorAnimation();
+            Rect cursorPosition = GetCursorDrawPosition();
+            GUI.Label(cursorPosition, activeCursor);
+            GUI.EndGroup();
         }
     }
-    /*private void InitializeResources()
-    {//My method to do this a little bit more organized
-        resourceImages = new Dictionary<ResourceType, Texture2D>();
-        for (int i = 0; i < resources.Length; i++)
+
+    private void UpdateCursorAnimation()
+    {
+        //sequence animation for cursor (based on more than one image for the cursor)
+        //change once per second, loops through array of images
+        if (activeCursorState == CursorState.Move)
         {
-            switch (resources[i].name)
-            {
-                case "Money":
-                    resourceImages.Add(ResourceType.Money, resources[i]);
-                    resourceValues.Add(ResourceType.Money, 0);
-                    resourceLimits.Add(ResourceType.Money, 0);
-                    break;
-                case "Power":
-                    resourceImages.Add(ResourceType.Power, resources[i]);
-                    resourceValues.Add(ResourceType.Power, 0);
-                    resourceLimits.Add(ResourceType.Power, 0);
-                    break;
-                default: break;
-            }
+            currentFrame = (int)Time.time % moveCursors.Length; //it will advance one frame per second
+            activeCursor = moveCursors[currentFrame]; //we avoid using a loop on the array
+        } else if (activeCursorState == CursorState.Attack)
+        {
+            currentFrame = (int)Time.time % attackCursors.Length;
+            activeCursor = attackCursors[currentFrame];
         }
-    }*/
+        else if (activeCursorState == CursorState.Harvest)
+        {
+            currentFrame = (int)Time.time % harvestCursors.Length;
+            activeCursor = harvestCursors[currentFrame];
+        }
+    }
 
+    private Rect GetCursorDrawPosition()
+    {
+        //set base position for the custom cursor image
+        float leftPos = Input.mousePosition.x;
+        float topPos = Screen.height - Input.mousePosition.y; //screen draw coordinates are inverted
 
+        //adjust position based on the type of cursor being shown
+        if (activeCursorState == CursorState.PanRight)
+        {
+            leftPos = Screen.width - activeCursor.width;
+        }
+        else if (activeCursorState == CursorState.PanDown)
+        {
+            topPos = Screen.height - activeCursor.height;
+        }
+        else if (activeCursorState == CursorState.Move || activeCursorState == CursorState.Select || activeCursorState == CursorState.Harvest)
+        {
+            topPos -= activeCursor.height / 2;
+            leftPos -= activeCursor.width / 2;
+        }
+        else if (activeCursorState == CursorState.RallyPoint)
+        {
+            topPos -= activeCursor.height;
+        }
+        return new Rect(leftPos, topPos, activeCursor.width, activeCursor.height);
+    }
 }
